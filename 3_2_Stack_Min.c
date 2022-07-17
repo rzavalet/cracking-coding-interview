@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#define SIZE_STACK 10
 struct node 
 {
   int value;
@@ -20,47 +21,57 @@ typedef struct node node_t;
 
 struct stack
 {
-  node_t array[100];
-
-  int top;
+  node_t array[SIZE_STACK];
+  node_t *top;
 };
 typedef struct stack stack_t;
 
 stack_t *alloc_stack()
 {
-  return calloc(1, sizeof(stack_t));
+  stack_t *stack = calloc(1, sizeof(stack_t));
+  stack->top = stack->array;
+
+  return stack;
 }
 
 void free_stack(stack_t *stack)
 {
   free(stack);
+
+  return;
 }
 
+/* The trick here is to check if the new element is smaller than the min in the
+ * substack. If so, then this node is the new min. Otherwise, the substack's
+ * min is still the min.
+ */
 void push(stack_t *stack, int value)
 {
-  if (stack->top >= sizeof(stack->array) / sizeof(stack->array[0])) return;
+  if (stack->top >= stack->array + sizeof(stack->array) / sizeof(stack->array[0])) return;
 
-  stack->array[stack->top].value = value;
-  stack->array[stack->top].min = (stack->top == 0 )
-                                    ? &stack->array[stack->top] 
-                                    : ((value < stack->array[stack->top - 1].value)
-                                          ? &stack->array[stack->top]
-                                          : stack->array[stack->top - 1].min);
+  stack->top->value = value;
+  stack->top->min = (stack->top == stack->array)
+                                    ? stack->array
+                                    : ((value < (stack->top - 1)->value)
+                                          ? stack->top
+                                          : (stack->top - 1)->min);
   stack->top ++;
+
+  return;
 }
 
 int pop(stack_t *stack)
 {
-  if (stack->top <= 0) return INT_MIN;
+  if (stack->top == stack->array) return INT_MIN;
 
-  return stack->array[--stack->top].value;
+  return (--stack->top)->value;
 }
 
 int min(stack_t *stack)
 {
-  if (stack->top <= 0) return INT_MAX;
+  if (stack->top == stack->array) return INT_MAX;
 
-  return stack->array[stack->top - 1].min->value;
+  return (stack->top - 1)->min->value;
 }
 
 
