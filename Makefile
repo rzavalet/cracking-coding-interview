@@ -16,6 +16,10 @@ all:
 	mkdir -p bin
 	$(CC) -o $(BIN)/$@ $^ $(CFLAGS) $(ASAN_FLAGS) $(LIBS)
 
+vis: res/graph.dot
+	dot -Tpng < res/graph.dot > res/graph.png
+	xdg-open res/graph.png
+
 .PHONY = clean
 
 clean:

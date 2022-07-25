@@ -54,3 +54,6 @@ dkms.conf
 
 # vim swap files
 *.swp
+
+# resources
+res/
