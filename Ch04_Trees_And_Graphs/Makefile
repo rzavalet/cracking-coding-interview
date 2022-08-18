@@ -8,12 +8,17 @@ CFLAGS = -ggdb -O0
 ASAN_FLAGS = -fsanitize=address -fsanitize=leak 
 LIBS =
 BIN = ./bin
+RES = ./res
 
 all:
 	@echo "Makefile needs your attention"
 
+utils.o : utils.c
+	$(CC) -c -o $(BIN)/$@ $^ $(CFLAGS) $(ASAN_FLAGS) $(LIBS)
+
 % : %.c
 	mkdir -p bin
+	mkdir -p res
 	$(CC) -o $(BIN)/$@ $^ $(CFLAGS) $(ASAN_FLAGS) $(LIBS)
 
 vis: res/graph.dot
@@ -24,6 +29,7 @@ vis: res/graph.dot
 
 clean:
 	rm $(BIN)/*
+	rm $(RES)/*
 
 # vim:ft=make
 #
