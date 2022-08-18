@@ -16,13 +16,6 @@
 #include "utils.h"
 
 
-struct treenode
-{
-  int value;
-  struct treenode *left;
-  struct treenode *right;
-};
-
 void insert_treenode(treenode_t **root, int value)
 {
   if (root == NULL) {
@@ -115,18 +108,17 @@ treenode_t *gen_random_tree(int num_nodes)
   return root;
 }
 
-struct node 
+treenode_t *gen_tree_from_array(int *arr, int sz_arr)
 {
-  int value;
-  struct node *prev;
-  struct node *next;
-};
+  srand(time(NULL));
+  treenode_t *root = NULL;
 
-struct list
-{
-  node_t *head;
-  node_t *tail;
-};
+  for (int i = 0; i < sz_arr; i++) {
+    insert_treenode(&root, arr[i]);
+  }
+
+  return root;
+}
 
 void add_last(list_t *list, int value) 
 {
@@ -268,14 +260,6 @@ bool is_empty(list_t *list)
   return list->head == NULL;
 }
 
-
-struct array_list
-{
-  void **array;
-  int size;
-  int next_slot;
-};
-typedef struct array_list array_list_t;
 
 array_list_t *create_array_list()
 {
